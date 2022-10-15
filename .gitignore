@@ -1,2 +1,2 @@
-dist
-src/target
+app/dist
+app/src/target
