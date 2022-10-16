@@ -7,3 +7,10 @@ edition = "2021"
 [dependencies]
 yew = "0.19"
 ethers = { git = "https://github.com/gakonst/ethers-rs" }
+eyre = "0.6"
+serde_json = "1.0.64"
+tokio = { version = "1.18", features = ["macros", "rt-multi-thread"] }
+
+[[bin]]
+name = "ens"
+path = "src/ens.rs"
