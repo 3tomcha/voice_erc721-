@@ -1,19 +1,14 @@
-use serde_json::{Result, Value};
+use serde_json::json;
 
-fn main() -> Result<()> {
-    let data = r#"
-        {
-            "name": "John Doe",
-            "age": 43,
-            "phones": [
-                "+44 1234567",
-                "+44 2334567"
-            ]
-        }
-    "#;
+fn main() {
+    let john = json!({
+        "name": "John Doe",
+        "age": 43,
+        "phones": [
+            "+44 1234567",
+            "+44 2345678"
+        ]
+    });
 
-    let v: Value = serde_json::from_str(data)?;
-    println!("Please call {} at the number {}", v["name"], v["phones"][0]);
-
-    Ok(())
+    println!("{}", john.to_string());
 }
