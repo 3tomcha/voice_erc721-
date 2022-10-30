@@ -6,41 +6,4 @@ edition = "2021"
 
 [dependencies]
 yew = "0.19"
-ethers = { git = "https://github.com/gakonst/ethers-rs" }
-eyre = "0.6"
-serde_json = "1.0.64"
-tokio = { version = "1.18", features = ["macros", "rt-multi-thread"] }
-reqwest = { version = "0.11" }
-ipfs-api-backend-hyper = "0.5" 
-hyper = { version = "0.14", features = ["full"] }
-[[bin]]
-name = "ens"
-path = "src/ens.rs"
-
-[[bin]]
-name = "contract_with_abi"
-path = "src/contract_with_abi.rs"
-
-[[bin]]
-name = "request"
-path = "src/get_reqwest.rs"
-
-[[bin]]
-name = "ipfs"
-path = "src/ipfs.rs"
-
-[[bin]]
-name = "hyper"
-path = "src/hyper.rs"
-
-[[bin]]
-name = "serde_json"
-path = "src/serde_json.rs"
-
-[[bin]]
-name = "jsonipfs"
-path = "src/jsonipfs.rs"
-
-[[bin]]
-name = "attributes_ipfs"
-path = "src/attributes_ipfs.rs"
+ethers = { version = "1.0.0" }
