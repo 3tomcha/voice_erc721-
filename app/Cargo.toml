@@ -36,3 +36,7 @@ path = "src/hyper.rs"
 [[bin]]
 name = "serde_json"
 path = "src/serde_json.rs"
+
+[[bin]]
+name = "jsonipfs"
+path = "src/jsonipfs.rs"
