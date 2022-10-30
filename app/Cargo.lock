@@ -37,6 +37,8 @@ name = "app"
 version = "0.1.0"
 dependencies = [
  "ethers",
+ "ethers-contract",
+ "ethers-core",
  "serde",
  "serde_json",
  "yew",
