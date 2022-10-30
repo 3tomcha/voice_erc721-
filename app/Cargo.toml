@@ -40,3 +40,7 @@ path = "src/serde_json.rs"
 [[bin]]
 name = "jsonipfs"
 path = "src/jsonipfs.rs"
+
+[[bin]]
+name = "attributes_ipfs"
+path = "src/attributes_ipfs.rs"
