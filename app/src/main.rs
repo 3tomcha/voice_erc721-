@@ -18,7 +18,7 @@ fn app() -> Html {
         use_effect_with_deps(move |_| {
             // let value = value;
             spawn_local(async move {
-                let addr = "0xDe990C95CCA66bAed94FdF67DaB43BCfC6d3B3aD"
+                let addr = "0x6B54d1665a0199e910cFE8D40C2eeeA0111Fd51c"
                     .parse::<Address>()
                     .expect("error");
                 let client = Provider::<Http>
@@ -35,12 +35,14 @@ fn app() -> Html {
                             .unwrap();
                 // console::log_1(&JsValue::from(abi.to_string()));
                 let contract = Contract::new(addr, abi, client);
-                let name = contract
-                    .method::<_, String>("name", ())
+                let receipient_address = "0x32a9E70324862ef7BF8bA7610AF701822ddE5364".parse::<Address>().expect("error");
+                let token_uri = String::from("https://gateway.pinata.cloud/ipfs/QmTFCG9UPu5gfa2edbXEZVcr6BLu8NLzV14DWCLsedNFUd");
+                contract
+                    .method::<_, String>("mintNFT", (receipient_address, token_uri))
                     .expect("error")
-                    .call().await
+                    .send().await
                     .expect("error");
-                console::log_1(&JsValue::from(name));
+                // console::log_1(&JsValue::from(res));
                 // value.set(owner);
             });
             || ()
