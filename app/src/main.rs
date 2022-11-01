@@ -18,7 +18,7 @@ fn app() -> Html {
         use_effect_with_deps(move |_| {
             // let value = value;
             spawn_local(async move {
-                let addr = "0x1261b8535678D59d1AeC7757aD3fbAE87A35F0FD"
+                let addr = "0xd8b934580fcE35a11B58C6D73aDeE468a2833fa8"
                     .parse::<Address>()
                     .expect("error");
                 let client = Provider::<Http>
