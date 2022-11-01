@@ -7,6 +7,8 @@ use std::io::prelude::*;
 use ethers_contract::Contract;
 use web_sys::console;
 use wasm_bindgen_futures::spawn_local;
+use gloo_net::http::Request;
+use wasm_bindgen::prelude::*;
 
 #[function_component(App)]
 fn app() -> Html {
@@ -24,16 +26,24 @@ fn app() -> Html {
                         "https://eth-goerli.g.alchemy.com/v2/lQQcdlj4Fye1AKw5R94wVNA-BDKevm0W"
                     )
                     .unwrap();
-                let file = File::open("./contract_abi.json").unwrap();
-                let reader = BufReader::new(file);
-                let abi: Abi = serde_json::from_reader(reader).unwrap();
+                let abi: Abi = Request::get("https://raw.githubusercontent.com/3tomcha/voice_erc721-/master/app/src/contract_abi.json")
+                            .send()
+                            .await
+                            .unwrap()
+                            .json()
+                            .await
+                            .unwrap();
+                // console::log_1(file);
+                // let file = File::open(format!("./contract_abi.json")).unwrap();
+                // let reader = BufReader::new(file);
+                // let abi: Abi = serde_json::from_reader(reader).unwrap();
                 let contract = Contract::new(addr, abi, client);
-                let owner = contract
-                    .method::<_, String>("owner", ())
+                let name = contract
+                    .method::<_, String>("name", ())
                     .expect("error")
                     .call().await
-                    .expect("error").to_string();
-                console::log_1(&owner.into());
+                    .expect("error");
+                console::log_1(&JsValue::from(name));
                 // value.set(owner);
             });
             || ()
