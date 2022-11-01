@@ -18,7 +18,7 @@ fn app() -> Html {
         use_effect_with_deps(move |_| {
             // let value = value;
             spawn_local(async move {
-                let addr = "0xd8b934580fcE35a11B58C6D73aDeE468a2833fa8"
+                let addr = "0xDe990C95CCA66bAed94FdF67DaB43BCfC6d3B3aD"
                     .parse::<Address>()
                     .expect("error");
                 let client = Provider::<Http>
@@ -33,10 +33,7 @@ fn app() -> Html {
                             .json()
                             .await
                             .unwrap();
-                // console::log_1(file);
-                // let file = File::open(format!("./contract_abi.json")).unwrap();
-                // let reader = BufReader::new(file);
-                // let abi: Abi = serde_json::from_reader(reader).unwrap();
+                // console::log_1(&JsValue::from(abi.to_string()));
                 let contract = Contract::new(addr, abi, client);
                 let name = contract
                     .method::<_, String>("name", ())
