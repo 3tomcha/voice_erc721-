@@ -8,23 +8,6 @@ use ethers_contract::Contract;
 use web_sys::console;
 use wasm_bindgen_futures::spawn_local;
 
-// #[function_component(App)]
-// fn app() -> Html {
-//     async fn my_async_fn() -> String { String::from("hello") }
-//     let string;
-//     spawn_local(async {
-//         string = my_async_fn().await;
-//         string.push_str(", world!");
-//         // console log "Hello, world!"
-//         // console::log_1(&string.into());
-//     });
-//     console::log_1(&string.into());
-//     // let result = my_async_fn();
-//     html! {
-//         <h1>{ "with text aaa" } </h1>
-//     }
-// }
-
 #[function_component(App)]
 fn app() -> Html {
     let value = use_state(|| "");
