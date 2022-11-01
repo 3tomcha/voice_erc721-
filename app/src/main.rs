@@ -9,6 +9,7 @@ use web_sys::console;
 use wasm_bindgen_futures::spawn_local;
 use gloo_net::http::Request;
 use wasm_bindgen::prelude::*;
+use ethers_providers::{ Ws };
 
 #[function_component(App)]
 fn app() -> Html {
@@ -21,11 +22,12 @@ fn app() -> Html {
                 let addr = "0x6B54d1665a0199e910cFE8D40C2eeeA0111Fd51c"
                     .parse::<Address>()
                     .expect("error");
-                let client = Provider::<Http>
-                    ::try_from(
-                        "https://eth-goerli.g.alchemy.com/v2/lQQcdlj4Fye1AKw5R94wVNA-BDKevm0W"
-                    )
-                    .unwrap();
+                // let client = Provider::<Http>
+                //     ::try_from(
+                //         "https://eth-goerli.g.alchemy.com/v2/lQQcdlj4Fye1AKw5R94wVNA-BDKevm0W"
+                //     )
+                //     .unwrap();
+                let client = Provider::<Ws>::connect("wss://eth-goerli.g.alchemy.com/v2/lQQcdlj4Fye1AKw5R94wVNA-BDKevm0W").await.expect("error");
                 let abi: Abi = Request::get("https://raw.githubusercontent.com/3tomcha/voice_erc721-/master/app/src/contract_abi.json")
                             .send()
                             .await
