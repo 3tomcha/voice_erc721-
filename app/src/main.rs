@@ -13,8 +13,21 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use ethers_providers::{ Ws };
 use std::future::Future;
-use mopa::Any;
+// use mopa::Any;
+use std::any::Any; 
 use gloo_utils::format::JsValueSerdeExt;
+use serde::{Deserialize, Serialize};
+use ethers_core::{
+    abi::{self, Detokenize, ParamType},
+    types::{
+        transaction::{eip2718::TypedTransaction, eip2930::AccessListWithGasUsed},
+        Address, Block, BlockId, BlockNumber, BlockTrace, Bytes, EIP1186ProofResponse, FeeHistory,
+        Filter, FilterBlockOption, GethDebugTracingOptions, GethTrace, Log, NameOrAddress,
+        Selector, Signature, Trace, TraceFilter, TraceType, Transaction, TransactionReceipt,
+        TransactionRequest, TxHash, TxpoolContent, TxpoolInspect, TxpoolStatus, H256, U256, U64,
+    },
+    utils,
+};
 
 // #[wasm_bindgen]
 // Provider::<Http>
@@ -23,7 +36,8 @@ extern crate mopa;
 
 #[wasm_bindgen(module = "/src/index.js")]
 extern "C" {
-    async fn detectEthereumProvider() -> JsValue;
+    #[wasm_bindgen(catch)]
+    async fn detectEthereumProvider() -> Result<JsValue, JsValue>;
 }
 
 // pub trait FromJsValue: WasmDescribe {
@@ -64,8 +78,20 @@ extern "C" {
 //     });
 // }
 
+#[derive(Serialize, Deserialize)]
+pub struct Provider<P> {
+    inner: P,
+    ens: Option<Address>,
+    interval: Option<Duration>,
+    from: Option<Address>,
+    /// Node client hasn't been checked yet = `None`
+    /// Unsupported node client = `Some(None)`
+    /// Supported node client = `Some(Some(NodeClient))`
+    _node_client: Arc<Mutex<Option<NodeClient>>>,
+}
+
 #[function_component(App)]
-fn app() -> Html {
+unsafe fn app() -> Html {
     let value = use_state(|| "");
     {
         let value = value.clone();
@@ -75,9 +101,23 @@ fn app() -> Html {
                 let addr = "0x6B54d1665a0199e910cFE8D40C2eeeA0111Fd51c"
                     .parse::<Address>() 
                     .expect("error");
-                let mut client = detectEthereumProvider().await;
-                let client2: mopa::Any = JsValueSerdeExt::into_serde(&client).unwrap();
-                mopafy!(client2);
+                // let mut client2: Provider::<Http>;
+                unsafe {
+                    let temp_provider = detectEthereumProvider().await.unwrap();
+                    let provider = temp_provider.into_serde::<Provider::<Http>>().unwrap();
+                    let client = SignerMiddleware::new(provider, "5");
+                    let client = Arc::new(client);
+
+                    // let client2: Provider::<Http> = JsValueSerdeExt::into_serde(client1).unwrap();
+                    // client2: Provider::<Http> = JsValueSerdeExt::into_serde::<&str>(Array).unwrap() as Provider::<Http>;
+                    // client2: Provider::<Http> = JsValueSerdeExt::into_serde::<Result<(Provider::<Http>), ()>>(&client).unwrap();
+                }
+                 
+                // let mut client2: Provider::<Http>;
+                // unsafe {
+                //     client2 = JsValueSerdeExt::into_serde::<T>(&client).unwrap() as Provider::<Http>;
+                // }
+                // mopafy!(client2);
                 // let client = provider::Provider::<Http>();
                 let abi: Abi = Request::get("https://raw.githubusercontent.com/3tomcha/voice_erc721-/master/app/src/contract_abi.json")
                             .send()
@@ -87,7 +127,7 @@ fn app() -> Html {
                             .await
                             .unwrap();
                 // console::log_1(&JsValue::from(abi.to_string()));
-                let mut contract = Contract::new(addr, abi, client2);
+                let mut contract = Contract::new(addr, abi, client);
                 let receipient_address = "0x32a9E70324862ef7BF8bA7610AF701822ddE5364".parse::<Address>().expect("error");
                 let token_uri = String::from("https://gateway.pinata.cloud/ipfs/QmTFCG9UPu5gfa2edbXEZVcr6BLu8NLzV14DWCLsedNFUd");
                 contract
@@ -102,7 +142,7 @@ fn app() -> Html {
         }, ());
     }
     html! {
-        <h1>{ "aaa" }</h1>
+        <h1>{ "aaac" }</h1>
     }
 }
 
